@@ -89,6 +89,7 @@ export default class Сhat {
     }
     /// login btn
   }
+
   valid(str) {
     const regExp = /^\[?([-+]?\d{1,2}[.]\d+),\s*([-+]?\d{1,3}[.]\d+)\]?$/gm;
     return regExp.test(str);
