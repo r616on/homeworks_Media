@@ -7,7 +7,7 @@ export default class Сhat {
     // this.url = 'localhost';
 
     this.onClick.bind(this);
-    // this.loginBtn.bind(this);
+    this.valid.bind(this);
     // this.wsMessage.bind(this);
     // this.connect.bind(this);
   }
@@ -72,8 +72,7 @@ export default class Сhat {
       const inputPopup = this.parentEl.querySelector(".popup-input");
       const input = this.widget.querySelector(".input__massage");
       if (input.value) {
-        const regExp = /^\[?([-+]?\d{1,2}[.]\d+),\s*([-+]?\d{1,3}[.]\d+)\]?$/gm;
-        if (regExp.test(inputPopup.value)) {
+        if (this.valid(inputPopup.value)) {
           const location = inputPopup.value;
           const popup = this.parentEl.querySelector(".popup");
           popup.remove();
@@ -89,6 +88,10 @@ export default class Сhat {
       popup.remove();
     }
     /// login btn
+  }
+  valid(str) {
+    const regExp = /^\[?([-+]?\d{1,2}[.]\d+),\s*([-+]?\d{1,3}[.]\d+)\]?$/gm;
+    return regExp.test(str);
   }
 
   addMassage(textMassage, location) {
