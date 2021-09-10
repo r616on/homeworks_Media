@@ -49,35 +49,35 @@ export default class Сhat {
     this.widget.querySelector(".input").addEventListener("submit", (e) => {
       e.preventDefault();
       const input = this.widget.querySelector(".input__massage");
-
-      if (this.location) {
-        if (input.value) {
-          this.addMassage(input.value);
-          input.value = "";
-        }
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const crd = pos.coords;
+            const location = `${crd.latitude},${crd.longitude}`;
+            if (input.value) {
+              this.addMassage(input.value, location);
+              input.value = "";
+            }
+          },
+          () => this.addPopup()
+        );
       } else {
         this.addPopup();
       }
     });
-
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((pos) => {
-        const crd = pos.coords;
-        this.location = `${crd.latitude},${crd.longitude}`;
-      });
-    }
   }
 
   onClick(e) {
     if (e.target.closest(".popup-ok")) {
-      const input = this.parentEl.querySelector(".popup-input");
+      const inputPopup = this.parentEl.querySelector(".popup-input");
+      const input = this.widget.querySelector(".input__massage");
       if (input.value) {
         const regExp = /^\[?([-+]?\d{1,2}[.]\d+),\s*([-+]?\d{1,3}[.]\d+)\]?$/gm;
-        if (regExp.test(input.value)) {
-          this.location = input.value;
+        if (regExp.test(inputPopup.value)) {
+          const location = inputPopup.value;
           const popup = this.parentEl.querySelector(".popup");
           popup.remove();
-          this.addMassage(input.value);
+          this.addMassage(input.value, location);
           input.value = "";
         } else {
           alert("не верные координаты");
@@ -91,7 +91,7 @@ export default class Сhat {
     /// login btn
   }
 
-  addMassage(textMassage) {
+  addMassage(textMassage, location) {
     const massage = document.createElement("div");
 
     massage.className = "massage";
@@ -104,7 +104,7 @@ export default class Сhat {
                     )}</div>
                   </div>
                   <div class="massage-text">${textMassage}</div>
-                  <div class="massage-location">${this.location}</div>
+                  <div class="massage-location">${location}</div>
                 </div>          
             `;
 
